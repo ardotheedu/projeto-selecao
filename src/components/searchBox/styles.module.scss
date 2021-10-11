@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    width: 1120px;
+    margin: 0 auto;
+} 
+.searchBox {
+    display: flex;
+} 
+.searchBarCity input[type=text] {
+    padding: 6px;
+    margin-top: 8px;
+    margin-right: 16px;
+}
+.searchBarCoor input[type=text]{
+    padding: 6px;
+    margin-top: 8px;
+}
+.searchOptions {
+    padding: 6px;
+    margin-top: 8px;
+}
+
+.search {
+    padding: 6px;
+    margin-top: 8px;
+}
