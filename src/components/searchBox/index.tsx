@@ -3,10 +3,16 @@ import { ChangeEvent, FormEvent, useContext, useState } from 'react';
 import styles from './styles.module.scss';   
 import { AuthContext } from '../../context/tracksContext';
 
-
+interface WeatherObject {
+  main: {
+    temp: string;
+  }
+}
 export function SearchBox() {
     const [searchOption, setSearchOptions] = useState('cidade')
     const [city, setCity] = useState('')
+    const [latitude, setLatitude] = useState('')
+    const [longitude, setLongitude] = useState('')
 
     const {getTracks} = useContext(AuthContext)
 
@@ -16,15 +22,22 @@ export function SearchBox() {
     }
 
     async function handleSearchWeather() {
-      const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.NEXT_PUBLIC_WHEATER_KEY}`, {
-        params: {
-          units: 'metric'
-        }
-      })
-      console.log(response.data)
+    
+        const response =  searchOption == "cidade" ?
+        await axios.get<WeatherObject>(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.NEXT_PUBLIC_WHEATER_KEY}`, {
+          params: {
+            units: 'metric'
+          }
+        })
+        : 
+        await axios.get<WeatherObject>(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.NEXT_PUBLIC_WHEATER_KEY}`, {
+          params: {
+            units: 'metric'
+          }
+        })
 
-      await getTracks()
-
+        console.log(response.data.main.temp)
+        await getTracks(response.data.main.temp)
     }
 
     
@@ -44,8 +57,8 @@ export function SearchBox() {
               </div>
             ) : (
               <div className={styles.searchBar}>
-                <input type="text" placeholder="Digite a latitude" />
-                <input type="text" placeholder="Digite a longitude" />
+                <input type="text" placeholder="Digite a latitude" value={latitude} onChange={e => setLatitude(e.target.value)}/>
+                <input type="text" placeholder="Digite a longitude" value={longitude} onChange={e => setLongitude(e.target.value)}/>
               </div>  
             )}
           </div>
