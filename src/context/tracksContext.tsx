@@ -3,25 +3,32 @@ import { api } from "../services/api";
 import Router from "next/router";
 import axios from "axios";
 
-interface TrackObject {
-    name: string;
-    href: string;
-    artists: {
+interface Tracks {
+    tracks: {
         name: string;
+        href: string;
+        artists: {
+            name: string;
+        }[]
+        album: {
+            imagens: {
+                url: string;
+            }[]
+        }  
     }[]
 }
-interface Tracks {
-    tracks: TrackObject[]
-    album: {
-        imagens: {
-            url: string;
-        }[]
-    } 
+
+interface TracksListData extends Tracks{
+    temperature: string;
+    city: string;
+    category: string
 }
 
 type AuthContextData = {
-    getTracks(temperature: string): Promise<Tracks | undefined>;
+    getTracks(temperature: string, city: string): Promise<void>;
+    data: TracksListData | undefined;
 }
+
 type AuthProviderProps = {
     children: ReactNode;
 }
@@ -30,8 +37,8 @@ export const AuthContext = createContext({} as AuthContextData);
 
 
 export function AuthProvider({ children }: AuthProviderProps) {
-
-    async function getTracks(temperature: string){
+    const [data, setData] = useState<TracksListData>()
+    async function getTracks(temperature: string, city: string){
         try {
             
             const response = await api.post('/access_token')
@@ -55,7 +62,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
             
 
-            const tracks = await axios.get<Tracks>(`https://api.spotify.com/v1/recommendations`, {
+            const response_tracks = await axios.get<Tracks>(`https://api.spotify.com/v1/recommendations`, {
                 params: {
                     market: "BR",
                     seed_artists: pop_artists_seeds,
@@ -66,15 +73,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     Authorization: `Bearer ${access_token}`
                 }
             })
-            return tracks.data
-
+            
+            let dataFormatted: TracksListData = {
+                temperature,
+                city,
+                category: "pop",
+                tracks: response_tracks.data.tracks
+            }
+            console.log(response_tracks.data)
+            console.log(dataFormatted)
+            setData(dataFormatted)
         } catch (err) {
             console.log(err)
         }
     }
 
     return (
-        <AuthContext.Provider value={{getTracks}}>
+        <AuthContext.Provider value={{getTracks, data}}>
             {children}
         </AuthContext.Provider>
     )

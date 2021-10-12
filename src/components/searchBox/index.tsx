@@ -36,8 +36,7 @@ export function SearchBox() {
           }
         })
 
-        console.log(response.data.main.temp)
-        await getTracks(response.data.main.temp)
+        await getTracks(response.data.main.temp, city)
     }
 
     
