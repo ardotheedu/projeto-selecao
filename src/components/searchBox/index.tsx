@@ -5,7 +5,7 @@ import { AuthContext } from '../../context/tracksContext';
 
 interface WeatherObject {
   main: {
-    temp: string;
+    temp: number;
   }
 }
 export function SearchBox() {
