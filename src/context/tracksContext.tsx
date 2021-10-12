@@ -3,18 +3,35 @@ import { api } from "../services/api";
 import Router from "next/router";
 import axios from "axios";
 
+interface TrackObject {
+    name: string;
+    href: string;
+    artists: {
+        name: string;
+    }[]
+}
+interface Tracks {
+    tracks: TrackObject[]
+    album: {
+        imagens: {
+            url: string;
+        }[]
+    } 
+}
+
 type AuthContextData = {
-    getTracks(): Promise<void>;
+    getTracks(temperature: string): Promise<Tracks | undefined>;
 }
 type AuthProviderProps = {
     children: ReactNode;
 }
+
 export const AuthContext = createContext({} as AuthContextData);
 
 
 export function AuthProvider({ children }: AuthProviderProps) {
 
-    async function getTracks(){
+    async function getTracks(temperature: string){
         try {
             
             const response = await api.post('/access_token')
@@ -36,7 +53,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const classica_tracks_seeds = "4bNwPPpk01D8pVV9IFSBde"
             const lofi_tracks_seeds = "3U5vBZK5EKPZPGUK35Bksa"
 
-            const tracks = await axios.get(`https://api.spotify.com/v1/recommendations`, {
+            
+
+            const tracks = await axios.get<Tracks>(`https://api.spotify.com/v1/recommendations`, {
                 params: {
                     market: "BR",
                     seed_artists: pop_artists_seeds,
@@ -47,8 +66,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     Authorization: `Bearer ${access_token}`
                 }
             })
-
-            console.log(tracks)
+            return tracks.data
 
         } catch (err) {
             console.log(err)
