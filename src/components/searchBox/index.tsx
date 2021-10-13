@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ChangeEvent, FormEvent, useContext, useState } from 'react';
 import styles from './styles.module.scss';   
-import { AuthContext } from '../../context/tracksContext';
+import { AuthContext } from '../../contexts/tracksContext';
 
 interface WeatherObject {
   main: {

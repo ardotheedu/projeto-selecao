@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import { AuthContext, TracksListData } from '../../context/tracksContext';
+import { AuthContext, TracksListData } from '../../contexts/tracksContext';
 
-interface TracksListDataSaved extends TracksListData {
+export interface TracksListDataSaved extends TracksListData {
     savedAt: string;
 }
 
