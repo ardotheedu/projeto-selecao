@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useState, useEffect } from "react"
 import { api } from "../services/api";
-import Router from "next/router";
+import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
 
 interface Tracks {
@@ -19,6 +19,7 @@ interface Tracks {
 }
 
 interface TracksListData extends Tracks{
+    id: string;
     temperature: number;
     city: string;
     category: string
@@ -52,6 +53,7 @@ const lofi_tracks_seeds = "3U5vBZK5EKPZPGUK35Bksa"
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [data, setData] = useState<TracksListData>()
+    
     async function getTracks(temperature: number, city: string){
         try {
             
@@ -98,6 +100,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             })
             
             let dataFormatted: TracksListData = {
+                id: uuidv4(),
                 temperature,
                 city,
                 category,
