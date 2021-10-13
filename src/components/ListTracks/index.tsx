@@ -1,5 +1,9 @@
 import { useContext } from 'react';
-import { AuthContext } from '../../context/tracksContext';
+import { AuthContext, TracksListData } from '../../context/tracksContext';
+
+interface TracksListDataSaved extends TracksListData {
+    savedAt: string;
+}
 
 export function ListTracks() {
 
@@ -7,12 +11,22 @@ export function ListTracks() {
     const saveRecomedations = () => {
         const recomendacoes = localStorage.getItem("recomendacoes");
         if (recomendacoes) {
+            const newData: TracksListDataSaved = {
+                ...data,
+                savedAt: new Date().toISOString(),
+            }
+            console.log(newData)
             const recomendacoesArray = JSON.parse(recomendacoes);
-            recomendacoesArray.push(data);
+            recomendacoesArray.push(newData);
             localStorage.setItem("recomendacoes", JSON.stringify(recomendacoesArray));
         } else {
             localStorage.setItem("recomendacoes", JSON.stringify([data]));
         }
+    }
+    if (data.tracks === undefined) {
+        return (
+            <div></div>
+        )
     }
     return (
         <div>
@@ -20,7 +34,7 @@ export function ListTracks() {
                 <h1>Musicas recomendadas</h1>
                 <button onClick={saveRecomedations}>Salvar</button>
             </div>
-            {data?.tracks.map(track => (
+            {data.tracks.map(track => (
                 <>
                     <p key={track.name}>{track.name}</p>
                 </>

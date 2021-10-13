@@ -18,16 +18,17 @@ interface Tracks {
     }[]
 }
 
-interface TracksListData extends Tracks{
+export interface TracksListData extends Tracks{
     id: string;
     temperature: number;
     city: string;
-    category: string
+    category: string;
+    createdAt: string;
 }
 
 type AuthContextData = {
     getTracks(temperature: number, city: string): Promise<void>;
-    data: TracksListData | undefined;
+    data: TracksListData;
 }
 
 type AuthProviderProps = {
@@ -52,8 +53,8 @@ const classical_tracks_seeds = "4bNwPPpk01D8pVV9IFSBde"
 const lofi_tracks_seeds = "3U5vBZK5EKPZPGUK35Bksa"
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [data, setData] = useState<TracksListData>()
-    
+    const [data, setData] = useState<TracksListData>({} as TracksListData);
+
     async function getTracks(temperature: number, city: string){
         try {
             
@@ -93,22 +94,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     seed_artists,
                     seed_genres,
                     seed_tracks,
+                    
                 },
                 headers: {
                     Authorization: `Bearer ${access_token}`
                 }
             })
-            
+
             let dataFormatted: TracksListData = {
                 id: uuidv4(),
                 temperature,
                 city,
                 category,
-                tracks: response_tracks.data.tracks
+                tracks: response_tracks.data.tracks,
+                createdAt: new Date().toISOString(),
             }
 
             console.log(dataFormatted)
             setData(dataFormatted)
+            
+            
         } catch (err) {
             console.log(err)
         }
