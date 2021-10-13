@@ -1,8 +1,10 @@
 import type { AppProps } from 'next/app'
-import { AuthProvider } from '../context/tracksContext';
+import { Header } from '../components/Header';
+import { AuthProvider } from '../contexts/tracksContext';
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
+        <Header />
         <Component {...pageProps} />
     </AuthProvider>
   )
