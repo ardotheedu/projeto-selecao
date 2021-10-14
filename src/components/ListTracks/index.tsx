@@ -1,6 +1,9 @@
 import { useContext } from 'react';
 import { AuthContext, TracksListData } from '../../contexts/tracksContext';
 
+import styles from './styles.module.scss'
+import {AiOutlineSave} from 'react-icons/ai'
+
 export interface TracksListDataSaved extends TracksListData {
     savedAt: string;
 }
@@ -11,9 +14,17 @@ export function ListTracks() {
     const saveRecomedations = () => {
         const recomendacoes = localStorage.getItem("recomendacoes");
         if (recomendacoes) {
+            const savedAt = new Date().toLocaleString('pt-BR', {
+                day: 'numeric',
+                year: 'numeric',
+                month: 'long',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+            })
             const newData: TracksListDataSaved = {
                 ...data,
-                savedAt: new Date().toISOString(),
+                savedAt,
             }
             console.log(newData)
             const recomendacoesArray = JSON.parse(recomendacoes);
@@ -23,21 +34,17 @@ export function ListTracks() {
             localStorage.setItem("recomendacoes", JSON.stringify([data]));
         }
     }
-    if (data.tracks === undefined) {
-        return (
-            <div></div>
-        )
-    }
+
     return (
-        <div>
-            <div>
-                <h1>Musicas recomendadas</h1>
-                <button onClick={saveRecomedations}>Salvar</button>
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <h1 className={styles.title}>Musicas recomendadas</h1>
+                <button className={styles.saveButton} onClick={saveRecomedations}><AiOutlineSave size={36} color="#cb208e"/></button>
             </div>
-            {data.tracks.map(track => (
-                <>
+            { data.tracks?.map(track => (
+                <div className={styles.tracks}>
                     <p key={track.name}>{track.name}</p>
-                </>
+                </div>
             ))}
         </div>
     )

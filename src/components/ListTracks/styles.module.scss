@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 2rem;
+    background-color: var(--purpleish);
+    padding: 16px;
+    border-radius: 5px;
+    min-height: 437px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.saveButton {
+    height: fit-content;
+    border: none;
+}
+
+.title {
+    background: linear-gradient(#cb208e, #6c14cf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}

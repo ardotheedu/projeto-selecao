@@ -107,7 +107,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 city,
                 category,
                 tracks: response_tracks.data.tracks,
-                createdAt: new Date().toISOString(),
+                createdAt: new Date().toLocaleString('pt-BR', {
+                    weekday: 'short', 
+                    day: 'numeric',
+                    year: 'numeric',
+                    month: 'long',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                }),
             }
 
             console.log(dataFormatted)
